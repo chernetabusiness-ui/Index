@@ -9,27 +9,31 @@
     <h1>Добро пожаловать в приложение Таро!</h1>
     <button id="authButton">Авторизоваться через ВКонтакте</button>
 
-    <!-- Подключаем библиотеку VK Bridge -->
+    <!-- Подключаем правильную библиотеку VK API -->
     <script type="text/javascript" src="https://vk.com/js/api/openapi.js?168"></script>
 
     <script>
-        // Функция инициализации, которая будет вызвана, когда библиотека полностью загрузится
+        // Ждем, пока библиотека и все скрипты загрузятся
         window.onload = function() {
-            // Инициализация приложения
-            VK.WebApp.Init();
+            if (typeof VK !== 'undefined' && VK.WebApp) {
+                // Инициализация приложения
+                VK.WebApp.Init();
 
-            // Запрос авторизации и получения токена
-            document.getElementById('authButton').addEventListener('click', function() {
-                VKWebAppGetAuthToken()
-                    .then(function (data) {
-                        console.log("Полученный токен:", data.access_token);
-                        alert("Токен получен!");
-                    })
-                    .catch(function (error) {
-                        console.log("Ошибка получения токена:", error);
-                        alert("Ошибка авторизации.");
-                    });
-            });
+                // Запрос авторизации и получения токена
+                document.getElementById('authButton').addEventListener('click', function() {
+                    VK.WebApp.GetAuthToken()
+                        .then(function (data) {
+                            console.log("Полученный токен:", data.access_token);
+                            alert("Токен получен!");
+                        })
+                        .catch(function (error) {
+                            console.log("Ошибка получения токена:", error);
+                            alert("Ошибка авторизации.");
+                        });
+                });
+            } else {
+                console.error('VK API не загружен');
+            }
         };
     </script>
 </body>
